@@ -1,8 +1,8 @@
-#include<grove_terminal.h>
+#include <universal_terminal.h>
 #define TFT_WHITE   0xffff
 #define TFT_BLUE    0x001f
 
-grove_terminal terminal;
+universal_terminal terminal;
 int32_t        value = 0;
 int32_t        skip = 0;
 void setup() {
