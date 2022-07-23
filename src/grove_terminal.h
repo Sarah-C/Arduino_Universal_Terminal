@@ -1,5 +1,5 @@
 #pragma once
-#include<stdint.h>
+#include <stdint.h>
 #include"itoa_plus.h"
 #define gen_print(type,...)                     \
     void print(type value, uint8_t base = 10){  \
@@ -15,13 +15,9 @@
         println(buf);                           \
     }
 
-class grove_terminal {
+class universal_terminal {
   public:
-    void begin(bool open = true, uint8_t direction = 1);
-    void turn_on();
-    void turn_off();
-    void global_foreground(uint16_t color);
-    void global_background(uint16_t color);
+    void begin();
     gen_print(uint8_t);
     gen_print(uint16_t);
     gen_print(uint32_t);
