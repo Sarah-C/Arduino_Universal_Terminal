@@ -7,12 +7,13 @@ If you just want to Print, Print, Print status updates to the display like a log
 Using a callback for the display of characters, any display can be used with this library, not just TFT_eSPI.         
 
 The callback funtion you write is passed the (x, y, text) to be sent to the display, your own code calls your relevant display libraries own function.          
-They all have an (x, y, character) library, so it should be easy.          
+All the ones I've seen have a drawString(x, y, character) type function, so it should be easy.          
 
 That's it! 
 
 Work remaining:          
 -Add the callback!       
+-Write some callback functions for several graphics libraries.                   
 -Update this readme with the examples for a few graphics libraries like g8u2, OneBitDisplay, etc...                  
 -Add a flashing cursor?         
 
