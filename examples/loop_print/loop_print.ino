@@ -1,7 +1,8 @@
 #include <universal_terminal.h>
 
-grove_terminal terminal;
+universal_terminal terminal;
 int32_t        value = 0;
+
 void setup() {
     terminal.begin();
 }
