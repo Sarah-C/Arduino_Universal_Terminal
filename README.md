@@ -6,9 +6,11 @@ Using a callback for the display of characters, any display can be used with thi
 
 Work remaining:          
 -Add the callback!       
+-Update this readme with the examples for a few graphics libraries like g8u2, OneBitDisplay, etc...
 -Add a flashing cursor?         
 
-..................................................                    
+Thanks to all the original writers for the original code, saved me hours.
+________________                  
 Old info:
 
 ### Reference
