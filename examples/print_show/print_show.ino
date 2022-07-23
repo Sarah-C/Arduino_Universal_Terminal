@@ -3,6 +3,7 @@
 universal_terminal terminal;
 int32_t        value = 0;
 int32_t        skip = 0;
+
 void setup() {
     terminal.begin(true, 0);
     char     a = 'a';
