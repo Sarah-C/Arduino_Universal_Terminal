@@ -1,7 +1,7 @@
-#include"grove_terminal.h"
-#include"stdio.h"
-#include"string.h"
-#include"TFT_eSPI.h"
+#include "universal_terminal.h"
+#include "stdio.h"
+#include "string.h"
+
 #define LCD_HEIGHT                  (240)
 #define LCD_WIDTH                   (320)
 #define LCD_PRINT_LINE_HEIGHT       (12)
@@ -36,50 +36,16 @@ namespace {
         return row;
     }
 }
-
-void grove_terminal::begin(bool open, uint8_t direction) {
-    tft.init();
-    tft.setRotation(direction);
-    tft.setTextSize(1);
-    tft.fillScreen(back);
-    tft.setTextColor(fore, back);
+void universal_terminal::begin(void) {
     current_row = 0;
-    current_column = 0;
-    if (open) {
-        turn_on();
-    }
-    if (direction & 1) {
-        lcd_print_row_count = LCD_PRINT_ROW_COUNT;
-        lcd_print_column_count = LCD_PRINT_COLUMN_COUNT;
-    } else {
-        lcd_print_row_count = (LCD_WIDTH / LCD_PRINT_LINE_HEIGHT + 1);
-        lcd_print_column_count = (LCD_HEIGHT / LCD_PRINT_LINE_WIDTH);
-    }
+    current_column = 0;   
+    lcd_print_row_count = LCD_PRINT_ROW_COUNT;
+    lcd_print_column_count = LCD_PRINT_COLUMN_COUNT;
 }
-void grove_terminal::turn_on() {
-    pinMode(LCD_BACKLIGHT, OUTPUT);
-    digitalWrite(LCD_BACKLIGHT, HIGH);
-}
-void grove_terminal::turn_off() {
-    pinMode(LCD_BACKLIGHT, OUTPUT);
-    digitalWrite(LCD_BACKLIGHT, LOW);
-}
-void grove_terminal::global_foreground(uint16_t color) {
-    fore = color;
-    tft.setTextColor(fore, back);
-    flush();
-}
-void grove_terminal::global_background(uint16_t color) {
-    back = color;
-    tft.fillScreen(back);
-    tft.setTextColor(fore, back);
-    flush();
-}
-
-void grove_terminal::print(const char* str) {
+void universal_terminal::print(const char* str) {
     print(str, strlen(str));
 }
-void grove_terminal::print(const char* str, uint32_t length) {
+void universal_terminal::print(const char* str, uint32_t length) {
     char* row = current_column == lcd_print_column_count ? break_row() : get_row(current_row);
     for (uint32_t i = 0; str[i] != '\0' && i < length; i++) {
         switch (str[i]) {
@@ -115,34 +81,34 @@ void grove_terminal::print(const char* str, uint32_t length) {
     }
 }
 
-void grove_terminal::print(double value, uint8_t precison) {
+void universal_terminal::print(double value, uint8_t precison) {
     char fmt[10];
     char buf[33];
     sprintf(fmt, "%%.%uf", precison);
     sprintf(buf, fmt, value);
     print(buf);
 }
-void grove_terminal::print(char value) {
+void universal_terminal::print(char value) {
     char buf[] = { value, '\0' };
     print(buf);
 }
-void grove_terminal::println(double value, uint8_t precison) {
+void universal_terminal::println(double value, uint8_t precison) {
     print(value, precison);
     print("\n");
 }
-void grove_terminal::println(char value) {
+void universal_terminal::println(char value) {
     char buf[] = { value, '\n', '\0' };
     print(buf);
 }
-void grove_terminal::println(const char* str) {
+void universal_terminal::println(const char* str) {
     print(str);
     print("\n");
 }
-void grove_terminal::println(const char* str, uint32_t length) {
+void universal_terminal::println(const char* str, uint32_t length) {
     print(str, length);
     print("\n");
 }
-void grove_terminal::printf(const char* fmt, ...) {
+void universal_terminal::printf(const char* fmt, ...) {
     char buf[128];
     va_list ap;
     va_start(ap, fmt);
@@ -150,10 +116,10 @@ void grove_terminal::printf(const char* fmt, ...) {
     print(buf);
     va_end(ap);
 }
-void grove_terminal::auto_flush(bool enable) {
+void universal_terminal::auto_flush(bool enable) {
     ::auto_flush = enable;
 }
-void grove_terminal::flush() {
+void universal_terminal::flush() {
     uint32_t i = 0;
     uint32_t index = 0;
     uint32_t height = 0;
@@ -169,10 +135,10 @@ void grove_terminal::flush() {
         auto start = get_row(index), p = start;
         auto width = 0;
         for (; p[0]; p++, width += LCD_PRINT_LINE_WIDTH) {
-            tft.drawChar(p[0], width, height, 1);
+            //  CALLBACK!     tft.drawChar(p[0], width, height, 1);
         }
         for (uint32_t ws = p - start; ws < column_count[i]; ws++, width += LCD_PRINT_LINE_WIDTH) {
-            tft.drawChar(' ', width, height, 1);
+            // CALLBACK!      tft.drawChar(' ', width, height, 1);
         }
         column_count[i] = p - start;
         height += LCD_PRINT_LINE_HEIGHT;
@@ -180,3 +146,4 @@ void grove_terminal::flush() {
         i += 1;
     }
 }
+
