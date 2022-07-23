@@ -1,8 +1,8 @@
-# Arduino_Universal_Terminal        
-This library provides a printing function similar to that of the terminal for any Arduino display.
-Based heavily on https://github.com/Seeed-Studio/Seeed_Arduino_Terminal
+# Arduino_Universal_Terminal [Work in progress! Don't use yet]        
+This library provides a printing function similar to that of the terminal for any Arduino display.             
+Based heavily on https://github.com/Seeed-Studio/Seeed_Arduino_Terminal              
 
-Using a callback for the display of characters, any display can be used with this library, not just TFT_eSPI.
+Using a callback for the display of characters, any display can be used with this library, not just TFT_eSPI.         
 
 ..................................................                    
 Old info:
