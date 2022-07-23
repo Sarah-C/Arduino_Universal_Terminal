@@ -4,6 +4,10 @@ Based heavily on https://github.com/Seeed-Studio/Seeed_Arduino_Terminal
 
 Using a callback for the display of characters, any display can be used with this library, not just TFT_eSPI.         
 
+Work remaining:          
+-Add the callback!       
+-Add a flashing cursor?         
+
 ..................................................                    
 Old info:
 
