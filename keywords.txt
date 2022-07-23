@@ -1,12 +1,12 @@
 ####################################################
-# Syntax Coloring Map For Grove Terminal Library
+# Syntax Coloring Map For Arduino Universal Terminal Library
 ####################################################
 
 ####################################################
 # Datatypes (KEYWORD1)
 ####################################################
 
-grove_terminal	KEYWORD1
+universal_terminal	KEYWORD1
 
 ####################################################
 # Methods and Functions (KEYWORD2)
@@ -17,8 +17,6 @@ begin		KEYWORD2
 begin		KEYWORD2
 turn_on		KEYWORD2
 turn_off	KEYWORD2
-global_foreground	KEYWORD2
-global_background	KEYWORD2
 printf		KEYWORD2
 flush		KEYWORD2
 auto_flush	KEYWORD2
