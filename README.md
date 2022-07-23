@@ -11,7 +11,15 @@ All the ones I've seen have a drawString(x, y, character) type function, so it s
 
 That's it! 
 
-Work remaining:          
+### Restrictions:
+-The library supports only one font size at a time.          
+........You supply the width/height in pixels for the display, and the columns/rows count for the text at the start.          
+-Colors have to be implemented by yourself in the callback function if you want them.             
+........The library knows nothing about color. It deals only with text and its position.               
+
+
+
+### Work remaining:          
 -Add the callback!       
 -Write some callback functions for several graphics libraries.                   
 -Update this readme with the examples for a few graphics libraries like g8u2, OneBitDisplay, etc...                  
