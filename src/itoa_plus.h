@@ -1,5 +1,5 @@
 #pragma once
-#include<stdint.h>
+#include <stdint.h>
 
 template<class a, class b>
 uint32_t itoa_plus(a* buf, b value, b base, const char* lut = "0123456789abcdefghijklmnopqrstuvwxyz") {
