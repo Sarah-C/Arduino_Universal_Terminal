@@ -1,14 +1,10 @@
-#include<grove_terminal.h>
-#define TFT_WHITE   0xffff
-#define TFT_BLUE    0x001f
+#include <universal_terminal.h>
 
-grove_terminal terminal;
+universal_terminal terminal;
 int32_t        value = 0;
 int32_t        skip = 0;
 void setup() {
     terminal.begin(true, 0);
-    terminal.global_foreground(TFT_WHITE);
-    terminal.global_background(TFT_BLUE);
     char     a = 'a';
     int8_t   b = int8_t(128); //overflow
     uint8_t  c = 128;
