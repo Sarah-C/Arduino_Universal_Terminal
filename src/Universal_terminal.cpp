@@ -60,6 +60,13 @@ void Universal_terminal::clearRow(uint16_t row) {
     displayRow(row);
 }
 
+void Universal_terminal::clear(void) {
+    for(uint16_t column = 0; column < displayColumns; column++){
+        clearRow(row);
+    }
+    setCursor(0, 0);
+}
+
 void Universal_terminal::setCursorRow(uint16_t row) {
     if(row >= displayRows) row = displayRows - 1;
     cursorRow = row;
