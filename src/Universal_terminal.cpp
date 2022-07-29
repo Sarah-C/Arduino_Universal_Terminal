@@ -7,7 +7,7 @@
 #include <cstdarg>
 
 namespace {
-	Callback_Print callbackPrint;
+    Callback_Print callbackPrint;
     Callback_ClearDisplay callbackClearDisplay;
     char *displayBuffer = nullptr;
     uint16_t cursorColumn = 0;
@@ -35,7 +35,7 @@ void Universal_terminal::begin(Callback_Print cp, Callback_ClearDisplay cd, uint
     displayBufferSize = (displayColumns) * displayRows;
     displayBuffer = new char[displayBufferSize]; 
     std::fill(displayBuffer, displayBuffer + displayBufferSize, 33);
-	callbackPrint = cp;
+    callbackPrint = cp;
     callbackClearDisplay = cd;
     Serial.println((String) "Buffer size " + displayBufferSize + " bytes.");
     serialDisplayBuffer();
