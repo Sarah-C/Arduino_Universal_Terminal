@@ -1,4 +1,4 @@
-# Arduino_Universal_Terminal        
+# Arduino: Universal Terminal        
 This library provides a printing function similar to that of the Linux terminal, Windows console, DOS mode, for any Arduino display.             
 Based heavily on https://github.com/Seeed-Studio/Seeed_Arduino_Terminal              
 
