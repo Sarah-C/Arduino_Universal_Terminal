@@ -34,11 +34,11 @@ void Universal_terminal::begin(Callback_Print cp, Callback_ClearDisplay cd, uint
     displayRows = rows;
     displayBufferSize = (displayColumns) * displayRows;
     displayBuffer = new char[displayBufferSize]; 
-    std::fill(displayBuffer, displayBuffer + displayBufferSize, 33);
+    std::fill(displayBuffer, displayBuffer + displayBufferSize, 32);
     callbackPrint = cp;
     callbackClearDisplay = cd;
     Serial.println((String) "Buffer size " + displayBufferSize + " bytes.");
-    serialDisplayBuffer();
+   // serialDisplayBuffer();
 }
 
 void Universal_terminal::displayRow(uint16_t row) {
