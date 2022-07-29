@@ -1,8 +1,10 @@
 
+// Demo using oneBitDisplay and the ESP32-C3 0.42"OLED by 01Space.
+// https://github.com/01Space/ESP32-C3-0.42LCD
+// https://github.com/bitbank2/OneBitDisplay
+
 #include <OneBitDisplay.h>
 #include "Universal_terminal.h"
-
-//static uint8_t ucBackBuffer[1024];
 
 #define USE_BACKBUFFER
 #define SDA_PIN 5
