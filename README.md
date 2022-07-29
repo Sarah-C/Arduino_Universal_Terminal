@@ -1,6 +1,6 @@
 # Arduino: Universal Terminal        
 This library for the Arduino IDE provides a printing function similar to that of the Linux terminal, Windows console, DOS mode, for any Arduino display.             
-Based heavily on https://github.com/Seeed-Studio/Seeed_Arduino_Terminal              
+Based a little on https://github.com/Seeed-Studio/Seeed_Arduino_Terminal for printing datatypes, though the print function is entirely re-written.              
 
 If you just want to Print, Print, Print status updates to the display like a log on any display, THIS library is for you!
 
