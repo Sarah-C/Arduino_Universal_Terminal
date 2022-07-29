@@ -61,7 +61,7 @@ void Universal_terminal::clearRow(uint16_t row) {
 }
 
 void Universal_terminal::clear(void) {
-    for(uint16_t column = 0; column < displayColumns; column++){
+    for(uint16_t row = 0; row < displayRows; row++){
         clearRow(row);
     }
     setCursor(0, 0);
