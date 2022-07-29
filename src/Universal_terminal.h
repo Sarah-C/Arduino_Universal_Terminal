@@ -28,6 +28,7 @@ class Universal_terminal {
     void moveToNextColumn(void);
     void clearRowBuffer(uint16_t row);
     void clearRow(uint16_t row);
+    void clear(void);
     void setCursorRow(uint16_t row);
     void setCursorColumn(uint16_t column);
     void setCursor(uint16_t row, uint16_t column);
