@@ -13,6 +13,9 @@ Universal_terminal ut;
 
 // Universal Terminal uses these callback functions to update the relevant display.
 void callbackClearDisplay(void){
+  // This is only needed if the display system doesn't clear a text character when a [space] is printed.
+  // If a space does clear out the character beneath, any short rows are filled with spaces, reducing
+  // flicker of the whole display by avoiding a full screen clear down.
   oled.clear();
 }
 
