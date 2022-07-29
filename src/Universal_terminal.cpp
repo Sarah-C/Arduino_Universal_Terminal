@@ -38,7 +38,6 @@ void Universal_terminal::begin(Callback_Print cp, Callback_ClearDisplay cd, uint
     callbackPrint = cp;
     callbackClearDisplay = cd;
     Serial.println((String) "Buffer size " + displayBufferSize + " bytes.");
-   // serialDisplayBuffer();
 }
 
 void Universal_terminal::displayRow(uint16_t row) {
@@ -49,17 +48,42 @@ void Universal_terminal::displayRow(uint16_t row) {
     }
 }
 
+void Universal_terminal::clearRowBuffer(uint16_t row) {
+    if(row >= displayRows) row = displayRows - 1;
+    uint16_t startOfRowIndex = row * displayColumns;
+    memset(displayBuffer + startOfRowIndex, 32, displayColumns);
+}
+
+void Universal_terminal::clearRow(uint16_t row) {
+    if(row >= displayRows) row = displayRows - 1;
+    clearRowBuffer(row);
+    displayRow(row);
+}
+
+void Universal_terminal::setCursorRow(uint16_t row) {
+    if(row >= displayRows) row = displayRows - 1;
+    cursorRow = row;
+}
+
+void Universal_terminal::setCursorColumn(uint16_t column) {
+    if(column >= displayColumns) column = displayColumns - 1;
+    cursorColumn = column;
+}
+
+void Universal_terminal::setCursor(uint16_t row, uint16_t column) {
+    if(row >= displayRows) row = displayRows - 1;
+    if(column >= displayColumns) column = displayColumns - 1;
+    cursorRow = row;
+    cursorColumn = column;
+}
+
 void Universal_terminal::print(const char* str) {
     print(str, strlen(str));
 }
 
 void Universal_terminal::scrollUp(void) {
-    //Serial.println("Before");
-    //serialDisplayBuffer();
     memcpy(displayBuffer, displayBuffer + displayColumns, displayBufferSize - displayColumns);
     memset(displayBuffer + displayBufferSize - displayColumns, 32, displayColumns);
-    //Serial.println("After");
-    //serialDisplayBuffer();
     callbackClearDisplay();
     for(uint8_t row = 0; row < displayRows; row++){
         displayRow(row);
@@ -148,11 +172,3 @@ void Universal_terminal::printf(const char* fmt, ...) {
     va_end(ap);
 }
 //##################################################################
-
-
-
-
-
-
-
-
