@@ -1,35 +1,45 @@
 
-#include <Arduino.h>
-#include <U8g2lib.h>
-#include <Universal_terminal.h>
-
+//#include "Arduino.h"
 #include <Wire.h>
-#define SDA_PIN 5
-#define SCL_PIN 6
-U8G2_SSD1306_72X40_ER_F_HW_I2C u8g2(U8G2_R0, /* reset=*/ U8X8_PIN_NONE);   // EastRising 0.42" OLED
+#include "SSD1306Ascii.h"
+#include "SSD1306AsciiWire.h"
+#include "Universal_terminal.h"
 
-/*
-#define LCD_HEIGHT                  (72)
-#define LCD_WIDTH                   (40)
-#define LCD_PRINT_LINE_HEIGHT       (8)
-#define LCD_PRINT_LINE_WIDTH        (8)*/
+// 0X3C+SA0 - 0x3C or 0x3D
+#define I2C_ADDRESS 0x3C
+
+SSD1306AsciiWire oled;
 Universal_terminal ut;
 
-void setup(void) {
-  Wire.begin(SDA_PIN, SCL_PIN);
-  u8g2.begin();
-  u8g2.setFont(u8g2_font_ncenB08_tr);
-  ut.begin(drawChar);
+// Universal Terminal uses these callback functions to update the relevant display.
+void callbackClearDisplay(void){
+  oled.clear();
 }
 
-void drawChar(const char str, unsigned char x, unsigned char y) {
-  char aStr[] = {str, '\0'};
-  u8g2.drawStr(x, y, aStr);
+void callbackPrint(const char character, uint16_t columnPixels, uint16_t rowCharacter){
+  columnPixels *= 8;
+  oled.setCursor((uint8_t) columnPixels, (uint8_t) rowCharacter);
+  oled.write(character);
 }
 
-void loop(void) {
-  u8g2.clearBuffer();
-  ut.print("Testing...");
-  u8g2.sendBuffer();
-  delay(1000);
+//#####################
+
+void setup() {
+  Wire.begin();
+  Wire.setClock(400000L);
+  Serial.begin(115200);
+  ut.begin(callbackPrint, callbackClearDisplay, 16, 8); // 16 characters wide, by 8 high
+  oled.begin(&Adafruit128x64, I2C_ADDRESS);
+  oled.setFont(font8x8);
+  // Complicated demo...
+  char buffer[40];
+  int freq = 123456;
+  float freqkHz = freq / 1000.0;
+  sprintf(buffer, "%.2f kHz...", freqkHz);
+  ut.print(buffer);
+}
+
+void loop() {
+  ut.print("123");
+  delay(200);
 }
