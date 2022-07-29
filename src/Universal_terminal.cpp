@@ -1,85 +1,111 @@
+#include "Arduino.h"
+
 #include "Universal_terminal.h"
 #include "stdio.h"
 #include "string.h"
+#include <stdlib.h>
 #include <cstdarg>
 
-#define LCD_HEIGHT                  (72)
-#define LCD_WIDTH                   (40)
-#define LCD_PRINT_LINE_HEIGHT       (9)
-#define LCD_PRINT_LINE_WIDTH        (10)
-#define LCD_PRINT_ROW_COUNT         (LCD_HEIGHT / LCD_PRINT_LINE_HEIGHT)
-#define LCD_PRINT_COLUMN_COUNT      (LCD_WIDTH / LCD_PRINT_LINE_WIDTH)
-
 namespace {
-	callbackPrintFunction CPF;
-    bool       is_full_row;
-    bool       auto_flush = true;
-    char       buffer[LCD_PRINT_ROW_COUNT * (1 + LCD_PRINT_COLUMN_COUNT)];
-    uint8_t    column_count[LCD_PRINT_ROW_COUNT];
-    uint16_t   lcd_print_row_count;
-    uint16_t   lcd_print_column_count;
-    uint16_t   current_row;
-    uint16_t   current_column;
-    static char* get_row(uint32_t index) {
-        return buffer + (index * lcd_print_column_count);
-    }
-    static char* break_row() {
-        current_column = 0;
-        current_row++;
-        if (current_row == lcd_print_row_count) {
-            is_full_row = true;
-            current_row = 0;
+	Callback_Print callbackPrint;
+    Callback_ClearDisplay callbackClearDisplay;
+    char *displayBuffer = nullptr;
+    uint16_t cursorColumn = 0;
+    uint16_t cursorRow = 0;
+    uint16_t displayColumns = 0;
+    uint16_t displayRows = 0;
+    uint16_t displayBufferSize = 0;
+}
+
+// For debugging. 
+void Universal_terminal::serialDisplayBuffer(void){
+    Serial.println("Buffer content:");
+    for(uint16_t row = 0; row < displayRows; row++){
+        for(uint16_t column = 0; column < displayColumns; column++){
+            Serial.print(displayBuffer[column + (row * displayColumns)]);
         }
-        auto row = get_row(current_row);
-        row[0] = '\0';
-        return row;
+        Serial.println("");
     }
 }
-void Universal_terminal::begin(callbackPrintFunction cpf) {
-    current_row = 0;
-    current_column = 0;
-    lcd_print_row_count = LCD_PRINT_ROW_COUNT;
-    lcd_print_column_count = LCD_PRINT_COLUMN_COUNT;
-	CPF = cpf;
+
+void Universal_terminal::begin(Callback_Print cp, Callback_ClearDisplay cd, uint16_t columns, uint16_t rows) {
+    Serial.println("Begining UT.");
+    displayColumns = columns;
+    displayRows = rows;
+    displayBufferSize = (displayColumns) * displayRows;
+    displayBuffer = new char[displayBufferSize]; 
+    std::fill(displayBuffer, displayBuffer + displayBufferSize, 33);
+	callbackPrint = cp;
+    callbackClearDisplay = cd;
+    Serial.println((String) "Buffer size " + displayBufferSize + " bytes.");
+    serialDisplayBuffer();
 }
+
+void Universal_terminal::displayRow(uint16_t row) {
+    uint16_t startOfRowIndex = row * displayColumns;
+    for(uint16_t column = 0; column < displayColumns; column++){
+        char character = displayBuffer[startOfRowIndex + column];
+        callbackPrint(character, column, row);
+    }
+}
+
 void Universal_terminal::print(const char* str) {
     print(str, strlen(str));
 }
-void Universal_terminal::print(const char* str, uint32_t length) {
-    char* row = current_column == lcd_print_column_count ? break_row() : get_row(current_row);
-    for (uint32_t i = 0; str[i] != '\0' && i < length; i++) {
-        switch (str[i]) {
+
+void Universal_terminal::scrollUp(void) {
+    //Serial.println("Before");
+    //serialDisplayBuffer();
+    memcpy(displayBuffer, displayBuffer + displayColumns, displayBufferSize - displayColumns);
+    memset(displayBuffer + displayBufferSize - displayColumns, 32, displayColumns);
+    //Serial.println("After");
+    //serialDisplayBuffer();
+    callbackClearDisplay();
+    for(uint8_t row = 0; row < displayRows; row++){
+        displayRow(row);
+    }
+}
+
+void Universal_terminal::scroll(void) {
+    if(cursorRow + 1 == displayRows){
+        scrollUp();                
+    }else{
+        cursorRow++;
+    }
+}
+
+void Universal_terminal::moveToNextColumn(void) {
+    cursorColumn++;
+    if(cursorColumn == displayColumns){
+        cursorColumn = 0;
+        scroll();
+    }
+}
+
+
+void Universal_terminal::print(const char* str, uint32_t stringLength) {
+    for(uint16_t index = 0; index < stringLength; index++){
+        unsigned char character = str[index];
+        switch (character) {
             case '\t':
             case '\v':
                 continue;
             case '\r':
-                if (str[i + 1] == '\n') {
-                    i += 1;
-                }
-            //no break
+                cursorColumn = 0;
+                break;
             case '\n':
-                row[current_column] = '\0';
-                current_column = lcd_print_column_count;
+                scroll();
                 break;
             default:
-                row[current_column++] = str[i];
+                displayBuffer[cursorColumn + (cursorRow * displayColumns)] = character;
+                callbackPrint(str[index], cursorColumn, cursorRow);
+                moveToNextColumn();
                 break;
-        }
-        if (current_column == lcd_print_column_count) {
-            if (str[i] != '\n') {
-                row[lcd_print_column_count] = '\0';
-            }
-            if (str[i + 1] != '\0' || str[i] == '\n') {
-                row = break_row();
-            }
-        }
-    }
-    row[current_column] = '\0';
+        } // End switch (character)
+    } // End for index
+} // End print
 
-    if (::auto_flush) {
-        flush();
-    }
-}
+//##################################################################
 
 void Universal_terminal::print(double value, uint8_t precison) {
     char fmt[10];
@@ -116,34 +142,12 @@ void Universal_terminal::printf(const char* fmt, ...) {
     print(buf);
     va_end(ap);
 }
-void Universal_terminal::auto_flush(bool enable) {
-    ::auto_flush = enable;
-}
-void Universal_terminal::flush() {
-    uint32_t i = 0;
-    uint32_t index = 0;
-    uint32_t height = 0;
-    uint32_t row_count = current_row + 1;
-    if (is_full_row) {
-        index = current_row + 1;
-        row_count = lcd_print_row_count;
-    }
-    while (i < row_count) {
-        if (index == lcd_print_row_count) {
-            index = 0;
-        }
-        auto start = get_row(index), p = start;
-        auto width = 0;
-        for (; p[0]; p++, width += LCD_PRINT_LINE_WIDTH) {
-            CPF(p[0], (unsigned char) width, (unsigned char) height);
-        }
-        for (uint32_t ws = p - start; ws < column_count[i]; ws++, width += LCD_PRINT_LINE_WIDTH) {
-            CPF(' ', (unsigned char) width, (unsigned char) height);
-        }
-        column_count[i] = p - start;
-        height += LCD_PRINT_LINE_HEIGHT;
-        index += 1;
-        i += 1;
-    }
-}
+//##################################################################
+
+
+
+
+
+
+
 
