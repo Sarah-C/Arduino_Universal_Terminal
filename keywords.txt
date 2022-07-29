@@ -11,10 +11,20 @@ universal_terminal	KEYWORD1
 ####################################################
 # Methods and Functions (KEYWORD2)
 ####################################################
+
+begin		KEYWORD2
+serialDisplayBuffer		KEYWORD2
+displayRow		KEYWORD2
+scrollUp		KEYWORD2
+scroll		KEYWORD2
+moveToNextColumn		KEYWORD2
+clearRowBuffer		KEYWORD2
+clearRow		KEYWORD2
+setCursorRow		KEYWORD2
+setCursorColumn		KEYWORD2
+setCursor		KEYWORD2
+clear   KEYWORD2
 print		KEYWORD2
 println		KEYWORD2
-begin		KEYWORD2
-clear   KEYWORD2
 printf		KEYWORD2
-flush		KEYWORD2
-auto_flush	KEYWORD2
+
