@@ -82,7 +82,6 @@ void Universal_terminal::moveToNextColumn(void) {
     }
 }
 
-
 void Universal_terminal::print(const char* str, uint32_t stringLength) {
     for(uint16_t index = 0; index < stringLength; index++){
         unsigned char character = str[index];
@@ -114,26 +113,32 @@ void Universal_terminal::print(double value, uint8_t precison) {
     sprintf(buf, fmt, value);
     print(buf);
 }
+
 void Universal_terminal::print(char value) {
     char buf[] = { value, '\0' };
     print(buf);
 }
+
 void Universal_terminal::println(double value, uint8_t precison) {
     print(value, precison);
     print("\n");
 }
+
 void Universal_terminal::println(char value) {
     char buf[] = { value, '\n', '\0' };
     print(buf);
 }
+
 void Universal_terminal::println(const char* str) {
     print(str);
     print("\n");
 }
+
 void Universal_terminal::println(const char* str, uint32_t length) {
     print(str, length);
     print("\n");
 }
+
 void Universal_terminal::printf(const char* fmt, ...) {
     char buf[128];
     va_list ap;
