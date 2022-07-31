@@ -20,7 +20,6 @@ That's it!
 
 
 ### Work remaining:          
--Add the callback!       
 -Write some callback functions for several graphics libraries.                   
 -Update this readme with the examples for a few graphics libraries like g8u2, OneBitDisplay, etc...                  
 -Add a flashing cursor?         
