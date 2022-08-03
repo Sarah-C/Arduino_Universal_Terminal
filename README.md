@@ -4,7 +4,10 @@ Based a little on https://github.com/Seeed-Studio/Seeed_Arduino_Terminal for pri
 
 If you just want to Print, Print, Print status updates to the display like a log on any display, THIS library is for you!
 
-Using a callback for the display of characters, any display can be used with this library, not just TFT_eSPI.         
+Not every OLED/LCD display library and display combination offer support for terminal-like scrolling, and some that do don't offer a large range of printing options such as exapnsive data types along with printf, println.
+This library fills this niche! If your display library has a command to print a character at a co-ordinate, you're good to go.
+
+Using a callback for the display of characters, and clearing the screen any display can be used with this library when you write the two relevant functions using your librarys own commands.         
 
 The callback funtion you write is passed the (x, y, text) to be sent to the display, your own code calls your relevant display libraries own function.          
 All the ones I've seen have a drawString(x, y, character) type function, so it should be easy.          
